@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cullyard — sort and edit any file with your AI agent</title>
+  <meta name="description" content="Cullyard is a local MCP server and desk for Windows. Claude Code or Antigravity sorts your photos, video, music, documents and PDFs into lanes while you watch, and each run can be sealed on Solana devnet.">
+  <meta property="og:title" content="Cullyard">
+  <meta property="og:description" content="Tell your agent how to sort. Watch the folders move.">
+  <meta property="og:image" content="/img/og.png">
+  <meta name="theme-color" content="#0e1013">
+  <link rel="icon" href="/img/mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@450;550;650&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav" id="top">
+    <div class="wrap nav-in">
+      <a class="logo" href="#top" aria-label="Cullyard home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="6" width="5" height="20" rx="2" class="m1"/><rect x="13.5" y="6" width="5" height="14" rx="2" class="m2"/><rect x="22" y="6" width="5" height="8" rx="2" class="m3"/></svg>
+        Cullyard
+      </a>
+      <nav aria-label="Main">
+        <a href="#how" data-i18n="nav.how">How it works</a>
+        <a href="#run" data-i18n="nav.run">Real run</a>
+        <a href="#tools" data-i18n="nav.tools">Tools</a>
+        <a href="#proof" data-i18n="nav.proof">Proof</a>
+        <a href="#install" data-i18n="nav.install">Install</a>
+      </nav>
+      <div class="nav-end">
+        <div class="lang" role="group" aria-label="Language">
+          <button data-lang="en" aria-pressed="true">EN</button><button data-lang="id" aria-pressed="false">ID</button>
+        </div>
+        <a class="btn ghost sm" href="https://github.com/bryankwandou/cullyard">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">MCP server and desk for Windows</p>
+        <h1 data-i18n="hero.title">Tell your agent how to sort. Watch the folders move.</h1>
+        <p class="lede" data-i18n="hero.lede">Drop a shoot, an album or a pile of contracts onto the desk. Claude Code or Antigravity reads every file over MCP, files it into Picks, Maybe, Rejects or lanes you name, and trims or resizes copies on request. Nothing leaves your disk.</p>
+        <div class="cta">
+          <a class="btn primary" href="#install" data-i18n="hero.cta">Install in one line</a>
+          <a class="btn ghost" href="#run" data-i18n="hero.watch">Watch a real run</a>
+        </div>
+        <dl class="facts">
+          <div><dt data-i18n="facts.kinds">File kinds</dt><dd class="num">10</dd></div>
+          <div><dt data-i18n="facts.tools">MCP tools</dt><dd class="num">11</dd></div>
+          <div><dt data-i18n="facts.tests">Tests passing</dt><dd class="num" id="tests-count">13/13</dd></div>
+        </dl>
+      </div>
+
+      <div class="stage" aria-hidden="true">
+        <div class="win">
+          <div class="win-bar"><span></span><span></span><span></span><em>cullyard desk</em><b class="live">live</b></div>
+          <div class="win-body">
+            <div class="prompt"><span class="caret">›</span><span class="typed" id="typed"></span></div>
+            <div class="board">
+              <div class="pile" id="pile"></div>
+              <div class="lane-demo" data-l="0"><h4>1 Picks</h4><div class="slot"></div></div>
+              <div class="lane-demo" data-l="1"><h4>2 Maybe</h4><div class="slot"></div></div>
+              <div class="lane-demo" data-l="2"><h4>3 Rejects</h4><div class="slot"></div></div>
+            </div>
+            <div class="ticker" id="ticker"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="strip">
+      <div class="wrap strip-in">
+        <span data-i18n="strip.a">Works with Claude Code, Antigravity and any MCP client</span>
+        <span data-i18n="strip.b">Photos · RAW · video · music · PDF · docs · archives</span>
+        <span data-i18n="strip.c">Edits write copies. Originals are never touched.</span>
+      </div>
+    </section>
+
+    <section class="wrap section" id="how">
+      <h2 class="h2" data-i18n="how.title">Three steps, no import wizard</h2>
+      <ol class="steps">
+        <li class="reveal">
+          <span class="step-n num">01</span>
+          <h3 data-i18n="how.1t">Point it at a folder</h3>
+          <p data-i18n="how.1p">Add Cullyard to your agent with one command and give it a workspace, say D:\Shoots\Bali. The desk opens on your machine at 127.0.0.1:4870.</p>
+        </li>
+        <li class="reveal">
+          <span class="step-n num">02</span>
+          <h3 data-i18n="how.2t">Drop files and say what you want</h3>
+          <p data-i18n="how.2p">Drag files from Explorer onto the desk. Then type in your agent: "keep the sharp harbor shots, park the blue hour set in Maybe, put contracts in Client docs."</p>
+        </li>
+        <li class="reveal">
+          <span class="step-n num">03</span>
+          <h3 data-i18n="how.3t">Watch it work, then overrule it</h3>
+          <p data-i18n="how.3p">Cards slide into lanes as the agent calls each tool. Disagree? Drag a card or press 1 to 9. Both of you edit the same folders, so nothing drifts.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="wrap section" id="run">
+      <div class="split">
+        <div>
+          <h2 class="h2" data-i18n="run.title">A real run, recorded as it happened</h2>
+          <p class="body" data-i18n="run.p">This is the desk while a script drives the actual MCP server the way an agent does: scan, make a lane, sort ten of eleven files, resize a pick, trim a clip, seal the log on devnet, verify the seal. No mockups, no speed-up tricks beyond the frame rate.</p>
+          <ul class="checks">
+            <li data-i18n="run.c1">10 files sorted across 4 lanes</li>
+            <li data-i18n="run.c2">1 WebP copy at 1200 px wide</li>
+            <li data-i18n="run.c3">1 three-second clip cut without re-encoding</li>
+            <li data-i18n="run.c4">1 devnet memo that matches the log hash</li>
+          </ul>
+        </div>
+        <figure class="video reveal">
+          <video src="/media/walkthrough.mp4" poster="/media/walkthrough-poster.jpg" controls muted playsinline preload="none"></video>
+          <figcaption data-i18n="run.cap">Walkthrough, 1440 × 860, recorded from headless Chrome.</figcaption>
+        </figure>
+      </div>
+      <div class="shots">
+        <figure class="reveal"><img src="/img/01-desk-inbox.jpg" alt="Desk with eleven files in the Inbox before sorting" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.a">Before: everything lands in Inbox.</figcaption></figure>
+        <figure class="reveal"><img src="/img/04-desk-sealed.jpg" alt="Desk after sorting, with the activity feed showing a devnet seal" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.b">After: lanes filled, log sealed.</figcaption></figure>
+        <figure class="reveal"><img src="/img/05-desk-indonesian.jpg" alt="Desk interface in Indonesian" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.c">The desk speaks English and Indonesian.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="wrap section" id="tools">
+      <h2 class="h2" data-i18n="tools.title">What your agent can call</h2>
+      <p class="body narrow" data-i18n="tools.p">Every tool returns plain JSON and fails with a readable message. Paths outside the workspace are refused, moves never overwrite, and edits always write a new file.</p>
+      <div class="table reveal" role="table" aria-label="MCP tools">
+        <div class="row head" role="row"><span role="columnheader">tool</span><span role="columnheader" data-i18n="tools.does">what it does</span></div>
+        <div class="row" role="row"><code>scan_workspace</code><span data-i18n="t.scan">Lists every file with kind, size, pixel size, duration, tags or page count.</span></div>
+        <div class="row" role="row"><code>describe_file</code><span data-i18n="t.describe">Metadata for one file.</span></div>
+        <div class="row" role="row"><code>list_lanes</code><span data-i18n="t.lanes">Current lanes and which file sits where.</span></div>
+        <div class="row" role="row"><code>create_lane</code><span data-i18n="t.create">Adds a lane such as "Hero shots" or "Final cut".</span></div>
+        <div class="row" role="row"><code>move_to_lane</code><span data-i18n="t.move">Moves a file into a lane folder. Refuses to overwrite.</span></div>
+        <div class="row" role="row"><code>resize_image</code><span data-i18n="t.resize">Writes a resized WebP, JPG, PNG or AVIF copy.</span></div>
+        <div class="row" role="row"><code>trim_media</code><span data-i18n="t.trim">Cuts a time range from video or audio with no re-encode.</span></div>
+        <div class="row" role="row"><code>log_digest</code><span data-i18n="t.digest">SHA-256 of the sorting log, computed locally.</span></div>
+        <div class="row" role="row"><code>seal_run</code><span data-i18n="t.seal">Writes that hash into a Solana devnet memo.</span></div>
+        <div class="row" role="row"><code>verify_seal</code><span data-i18n="t.verify">Recomputes the hash and checks it against the chain.</span></div>
+        <div class="row" role="row"><code>list_kinds</code><span data-i18n="t.kinds">The file kinds Cullyard recognises.</span></div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="proof">
+      <div class="split">
+        <div>
+          <h2 class="h2" data-i18n="proof.title">Proof that a sort happened, and when</h2>
+          <p class="body" data-i18n="proof.p">Photographers hand over selects, editors hand over cuts, assistants clean out a client's folder. Cullyard keeps an append-only log of every move. Sealing writes its SHA-256 into a memo on Solana devnet, so anyone with the log can check it was not edited after the fact. Your files and file names never go on-chain, only the hash.</p>
+        </div>
+        <div class="proof reveal">
+          <div class="proof-row"><span data-i18n="proof.sig">Signature</span><a class="mono" id="sig" href="https://explorer.solana.com/?cluster=devnet">pending</a></div>
+          <div class="proof-row"><span data-i18n="proof.memo">Memo</span><code id="memo">cullyard:v1 log=… entries=…</code></div>
+          <div class="proof-row"><span data-i18n="proof.check">Local check</span><b class="ok" id="match">match</b></div>
+          <div class="proof-row"><span data-i18n="proof.net">Network</span><span>Solana devnet · Memo v1</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="install">
+      <h2 class="h2" data-i18n="install.title">Install</h2>
+      <p class="body narrow" data-i18n="install.p">You need Node.js 20 or newer. FFmpeg ships with the package, so video and audio work out of the box on Windows. Replace the folder with your own.</p>
+      <div class="tabs reveal">
+        <div class="tablist" role="tablist">
+          <button role="tab" aria-selected="true" aria-controls="p-cc" id="t-cc">Claude Code</button>
+          <button role="tab" aria-selected="false" aria-controls="p-ag" id="t-ag" tabindex="-1">Antigravity</button>
+          <button role="tab" aria-selected="false" aria-controls="p-any" id="t-any" tabindex="-1" data-i18n="install.other">Any MCP client</button>
+        </div>
+        <div class="panel" role="tabpanel" id="p-cc" aria-labelledby="t-cc">
+          <pre><code>claude mcp add cullyard -- npx -y github:bryankwandou/cullyard "D:\Shoots\Bali"</code></pre>
+          <button class="copy" type="button" data-i18n="install.copy">Copy</button>
+        </div>
+        <div class="panel" role="tabpanel" id="p-ag" aria-labelledby="t-ag" hidden>
+          <pre><code>// mcp_config.json
+{
+  "mcpServers": {
+    "cullyard": {
+      "command": "npx",
+      "args": ["-y", "github:bryankwandou/cullyard", "D:\\Shoots\\Bali"]
+    }
+  }
+}</code></pre>
+          <button class="copy" type="button" data-i18n="install.copy">Copy</button>
+        </div>
+        <div class="panel" role="tabpanel" id="p-any" aria-labelledby="t-any" hidden>
+          <pre><code>git clone https://github.com/bryankwandou/cullyard
+cd cullyard && npm install && npm test
+node bin/cullyard.js "D:\Shoots\Bali"     # MCP over stdio + desk on :4870</code></pre>
+          <button class="copy" type="button" data-i18n="install.copy">Copy</button>
+        </div>
+      </div>
+      <p class="fine" data-i18n="install.seal">To seal runs, set CULLYARD_KEYPAIR to a devnet keypair file. Without it, sorting and editing work the same and seal_run politely says no.</p>
+    </section>
+
+    <section class="wrap section" id="kit">
+      <h2 class="h2" data-i18n="kit.title">Media kit</h2>
+      <p class="body narrow" data-i18n="kit.p">Everything below comes from the same recorded run as the walkthrough above.</p>
+      <div class="kit">
+        <figure class="kit-video reveal">
+          <video src="/media/cullyard-marketing.mp4" poster="/media/marketing-poster.jpg" controls muted playsinline preload="none"></video>
+          <figcaption data-i18n="kit.vcap">Product film, 51 seconds, 1920 × 1080, no sound.</figcaption>
+        </figure>
+        <ul class="kit-list reveal">
+          <li><a href="/report.html"><b data-i18n="kit.report">Build report</b><span data-i18n="kit.reportd">What was built, how it was checked, screenshots and limits.</span></a></li>
+          <li><a href="/files/cullyard-pitch.pdf"><b data-i18n="kit.deck">Pitch deck (PDF)</b><span data-i18n="kit.deckd">Eight slides: problem, product, how it works, the seal, next steps.</span></a></li>
+          <li><a href="/files/agent-transcript.txt"><b data-i18n="kit.log">Agent transcript</b><span data-i18n="kit.logd">Every MCP call and reply from the recorded run.</span></a></li>
+          <li><a href="/proof.json"><b data-i18n="kit.proof">proof.json</b><span data-i18n="kit.proofd">Signature, memo, signer and the local hash it matched.</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap section limits">
+      <h2 class="h2" data-i18n="lim.title">What it does not do, yet</h2>
+      <ul class="lim-list">
+        <li data-i18n="lim.1">It does not judge photos by itself. Your agent decides; Cullyard gives it the facts and the hands.</li>
+        <li data-i18n="lim.2">No timeline editor. Trims and resizes are single steps, not a Premiere replacement.</li>
+        <li data-i18n="lim.3">Seals use devnet. A mainnet option waits until someone asks for it with a real workflow.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span>Cullyard · MIT</span>
+      <span class="foot-links"><a href="/report.html" data-i18n="foot.report">Build report</a><a href="https://github.com/bryankwandou/cullyard">github.com/bryankwandou/cullyard</a></span>
+    </div>
+  </footer>
+  <script src="/site.js" defer></script>
+</body>
+</html>

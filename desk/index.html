@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cullyard Desk</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315181D'/%3E%3Crect x='7' y='8' width='4' height='16' rx='1.5' fill='%23F2B33D'/%3E%3Crect x='14' y='8' width='4' height='11' rx='1.5' fill='%23E6E8EB'/%3E%3Crect x='21' y='8' width='4' height='6' rx='1.5' fill='%238B929C'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/desk.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="6" width="5" height="20" rx="2" class="m1"/><rect x="13.5" y="6" width="5" height="14" rx="2" class="m2"/><rect x="22" y="6" width="5" height="8" rx="2" class="m3"/></svg>
+      <span class="word">Cullyard</span>
+      <span class="ws" id="ws" title="Workspace folder"></span>
+    </div>
+    <div class="bar-right">
+      <span class="status" id="status"><span data-t="live">Live</span></span>
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="en" aria-pressed="true">EN</button>
+        <button data-lang="id" aria-pressed="false">ID</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="desk">
+    <section class="col inbox" data-lane="" aria-labelledby="inbox-h">
+      <header><h2 id="inbox-h" data-t="inbox">Inbox</h2><span class="count" id="inbox-count">0</span></header>
+      <label class="dropzone" id="dropzone">
+        <input type="file" multiple id="picker" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <strong data-t="drop">Drop files here, or anywhere on the desk</strong>
+        <span data-t="dropHint">Photos, video, music, documents, PDFs. Anything.</span>
+      </label>
+      <ul class="cards" id="inbox"></ul>
+    </section>
+
+    <div class="lanes" id="lanes"></div>
+
+    <aside class="col activity" aria-labelledby="act-h">
+      <header><h2 id="act-h" data-t="activity">Agent activity</h2></header>
+      <ol class="feed" id="feed"></ol>
+    </aside>
+  </main>
+
+  <footer class="hint"><kbd>1</kbd>–<kbd>9</kbd> <span data-t="keys">Select a card, then press 1–9 to send it to a lane</span></footer>
+  <div class="veil" id="veil" hidden><div><strong data-t="drop">Drop files here</strong></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/desk.js"></script>
+</body>
+</html>

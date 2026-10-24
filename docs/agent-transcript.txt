@@ -1,0 +1,142 @@
+
+> scan_workspace {}
+{
+  "workspace": "<workspace>",
+  "files": [
+    {
+      "name": "client-contract.pdf",
+      "kind": "pdf",
+      "ext": "pdf",
+      "bytes": 1326,
+      "modified": "2026-10-23T17:31:04.963Z",
+      "pages": 3
+    },
+    {
+      "name": "drone-pass.mp4",
+      "kind": "video",
+      "ext": "mp4",
+      "bytes": 3214720,
+      "modified": "2026-10-23T17:31:04.793Z"
+    },
+    {
+      "name": "IMG_2041.jpg",
+      "kind": "image",
+      "ext": "jpg",
+      "bytes": 34079,
+      "modifi …
+
+> create_lane {"name":"Client docs"}
+{
+  "lanes": [
+    "Picks",
+    "Maybe",
+    "Rejects",
+    "Client docs"
+  ]
+}
+
+> move_to_lane {"file":"client-contract.pdf","lane":"Client docs"}
+{
+  "from": "client-contract.pdf",
+  "to": "Client docs\\client-contract.pdf",
+  "lane": "Client docs"
+}
+
+> move_to_lane {"file":"drone-pass.mp4","lane":"Picks"}
+{
+  "from": "drone-pass.mp4",
+  "to": "Picks\\drone-pass.mp4",
+  "lane": "Picks"
+}
+
+> move_to_lane {"file":"IMG_2041.jpg","lane":"Picks"}
+{
+  "from": "IMG_2041.jpg",
+  "to": "Picks\\IMG_2041.jpg",
+  "lane": "Picks"
+}
+
+> move_to_lane {"file":"IMG_2042.jpg","lane":"Maybe"}
+{
+  "from": "IMG_2042.jpg",
+  "to": "Maybe\\IMG_2042.jpg",
+  "lane": "Maybe"
+}
+
+> move_to_lane {"file":"IMG_2043.jpg","lane":"Rejects"}
+{
+  "from": "IMG_2043.jpg",
+  "to": "Rejects\\IMG_2043.jpg",
+  "lane": "Rejects"
+}
+
+> move_to_lane {"file":"IMG_2044.jpg","lane":"Picks"}
+{
+  "from": "IMG_2044.jpg",
+  "to": "Picks\\IMG_2044.jpg",
+  "lane": "Picks"
+}
+
+> move_to_lane {"file":"IMG_2045.jpg","lane":"Maybe"}
+{
+  "from": "IMG_2045.jpg",
+  "to": "Maybe\\IMG_2045.jpg",
+  "lane": "Maybe"
+}
+
+> move_to_lane {"file":"IMG_2046.jpg","lane":"Rejects"}
+{
+  "from": "IMG_2046.jpg",
+  "to": "Rejects\\IMG_2046.jpg",
+  "lane": "Rejects"
+}
+
+> move_to_lane {"file":"night-ferry.mp3","lane":"Maybe"}
+{
+  "from": "night-ferry.mp3",
+  "to": "Maybe\\night-ferry.mp3",
+  "lane": "Maybe"
+}
+
+> move_to_lane {"file":"shot-list.csv","lane":"Client docs"}
+{
+  "from": "shot-list.csv",
+  "to": "Client docs\\shot-list.csv",
+  "lane": "Client docs"
+}
+
+> resize_image {"file":"Picks/IMG_2041.jpg","width":1200,"format":"webp"}
+{
+  "output": "<workspace>\\Picks\\IMG_2041-1200xauto.webp",
+  "width": 1200,
+  "height": 800,
+  "bytes": 11962
+}
+
+> trim_media {"file":"Picks/drone-pass.mp4","startSec":1,"endSec":4}
+{
+  "output": "<workspace>\\Picks\\drone-pass-trim-1-4.mp4",
+  "bytes": 1654112
+}
+
+> log_digest {}
+{
+  "sha256": "46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1",
+  "entries": 10
+}
+
+> seal_run {}
+{
+  "signature": "49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm",
+  "explorer": "https://explorer.solana.com/tx/49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm?cluster=devnet",
+  "memo": "cullyard:v1 log=46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1 entries=10",
+  "signer": "AsrL4uc9Ct7rhCASJXMhCtAX3k76RgkSsoe3pZFsBdyM"
+}
+
+> verify_seal {"signature":"49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm"}
+{
+  "signature": "49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm",
+  "localSha256": "46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1",
+  "onChain": "cullyard:v1 log=46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1 entries=10",
+  "match": true
+}
