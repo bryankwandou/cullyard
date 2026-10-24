@@ -7,6 +7,8 @@ export const STRINGS = {
     action_move: 'moved', action_drop: 'dropped', action_seal: 'sealed the log on devnet', to: 'to',
     noActivity: 'When your agent sorts something, it shows up here.', create: 'Create', cancel: 'Cancel',
     uploaded: 'Added', failed: 'Failed',
+    action_assess: 'measured', photos: 'photos', rank: 'rank',
+    flag_soft: 'soft', flag_dark: 'dark', flag_bright: 'bright', flag_duplicate: 'duplicate', flag_best: 'best of burst',
   },
   id: {
     inbox: 'Kotak masuk', drop: 'Taruh file di sini, atau di mana saja di desk', dropHint: 'Foto, video, musik, dokumen, PDF. Apa saja.',
@@ -15,6 +17,8 @@ export const STRINGS = {
     action_move: 'memindahkan', action_drop: 'menambahkan', action_seal: 'menyegel log di devnet', to: 'ke',
     noActivity: 'Saat agent memilah sesuatu, catatannya muncul di sini.', create: 'Buat', cancel: 'Batal',
     uploaded: 'Ditambahkan', failed: 'Gagal',
+    action_assess: 'mengukur', photos: 'foto', rank: 'peringkat',
+    flag_soft: 'kurang tajam', flag_dark: 'gelap', flag_bright: 'terlalu terang', flag_duplicate: 'duplikat', flag_best: 'terbaik di burst',
   },
 };
 

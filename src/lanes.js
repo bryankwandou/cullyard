@@ -54,7 +54,7 @@ export async function createLane(root, name) {
 
 // Moves a file into a lane folder inside the workspace. Refuses to leave the root
 // and never overwrites an existing file.
-export async function moveToLane(root, relFile, lane) {
+export async function moveToLane(root, relFile, lane, reason) {
   const laneName = safeLaneName(lane);
   const state = await loadState(root);
   if (!state.lanes.includes(laneName)) throw new Error(`unknown lane "${laneName}"`);
@@ -78,6 +78,7 @@ export async function moveToLane(root, relFile, lane) {
   delete state.assignments[path.relative(root, from)];
   state.assignments[rel] = laneName;
   await saveState(root, state);
-  await appendLog(root, { action: 'move', file: base, lane: laneName });
-  return { from: path.relative(root, from), to: rel, lane: laneName };
+  const why = reason ? String(reason).trim().slice(0, 160) : '';
+  await appendLog(root, { action: 'move', file: base, lane: laneName, ...(why && { reason: why }) });
+  return { from: path.relative(root, from), to: rel, lane: laneName, ...(why && { reason: why }) };
 }

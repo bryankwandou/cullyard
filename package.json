@@ -1,6 +1,6 @@
 {
   "name": "cullyard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A local desk where your AI agent sorts and edits photos, video, music, documents and PDFs over MCP. Every run can be sealed on Solana devnet.",
   "type": "module",
   "bin": {

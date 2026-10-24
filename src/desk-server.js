@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { scanFolder } from './scan.js';
 import { loadState, createLane, moveToLane, appendLog } from './lanes.js';
+import { loadQuality } from './look.js';
 
 const DESK_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'desk');
 const STATIC = { '/': 'index.html', '/desk.css': 'desk.css', '/desk.js': 'desk.js', '/i18n.js': 'i18n.js' };
@@ -26,7 +27,7 @@ export async function deskState(root) {
   }
   const log = await fs.readFile(path.join(root, '.cullyard', 'log.jsonl'), 'utf8').catch(() => '');
   const recent = log.split('\n').filter(Boolean).slice(-40).map((l) => JSON.parse(l)).reverse();
-  return { workspace: root, laneOrder: state.lanes, inbox, lanes, log: recent };
+  return { workspace: root, laneOrder: state.lanes, inbox, lanes, log: recent, quality: await loadQuality(root) };
 }
 
 function inside(root, rel) {

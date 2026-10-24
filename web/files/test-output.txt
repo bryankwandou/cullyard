@@ -1,25 +1,21 @@
-
-> cullyard@0.1.0 test
-> node --test
-
-✔ kinds: maps known extensions and falls back to other (2.1701ms)
-✔ scan: describes images and keeps unknown files (1045.7129ms)
-✔ scan: a corrupt file is still listed, with a metaError (1607.56ms)
-✔ lanes: default state, create custom lane, reject bad names (337.3862ms)
-✔ move: sorts a file into a lane, records it, never overwrites (742.1231ms)
-✔ move: refuses unknown lanes and paths outside the workspace (102.4841ms)
-✔ edit: resize writes a new webp and keeps the original untouched (300.4283ms)
-✔ scan: video files report duration, codec and frame size (11797.4359ms)
-✔ desk: serves the UI (514.5288ms)
-✔ desk: upload, no overwrite, move, state, log (1781.1731ms)
-✔ desk: refuses path traversal, hidden names and cross-origin writes (74.1404ms)
-✔ seal: digest matches a plain sha256 of the log and the memo format is stable (214.7244ms)
-✔ mcp: stdio server lists tools and sorts a file end to end (8776.5817ms)
-ℹ tests 13
-ℹ suites 0
-ℹ pass 13
+﻿✔ kinds: maps known extensions and falls back to other (14.8414ms)
+✔ scan: describes images and keeps unknown files (6224.7999ms)
+✔ scan: a corrupt file is still listed, with a metaError (10721.0271ms)
+✔ lanes: default state, create custom lane, reject bad names (44.4959ms)
+✔ move: sorts a file into a lane, records it, never overwrites (91.2433ms)
+✔ move: refuses unknown lanes and paths outside the workspace (13.0162ms)
+✔ edit: resize writes a new webp and keeps the original untouched (1600.5188ms)
+✔ scan: video files report duration, codec and frame size (27318.0963ms)
+✔ desk: serves the UI (4799.3576ms)
+✔ desk: upload, no overwrite, move, state, log (10849.2981ms)
+✔ desk: refuses path traversal, hidden names and cross-origin writes (1847.5964ms)
+✔ seal: digest matches a plain sha256 of the log and the memo format is stable (3186.3877ms)
+✔ look: blur lowers measured sharpness, a dark frame reads dark (11447.4941ms)
+✔ look: a sharp subject on a blurred background still measures sharp (4741.1235ms)
+✔ look: assess flags soft and dark frames, groups a burst and keeps its sharpest frame (14724.0586ms)
+✔ look: same framing in different light is not a burst (5055.6607ms)
+✔ look: contact sheet numbers each frame and caps at 16 (5764.9416ms)
+✔ mcp: stdio server lists tools and sorts a file end to end (41843.1193ms)
+ℹ tests 18
+ℹ pass 18
 ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 17609.7134

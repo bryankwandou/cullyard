@@ -8,7 +8,7 @@
       "kind": "pdf",
       "ext": "pdf",
       "bytes": 1326,
-      "modified": "2026-10-23T17:31:04.963Z",
+      "modified": "2026-10-24T06:03:40.548Z",
       "pages": 3
     },
     {
@@ -16,14 +16,14 @@
       "kind": "video",
       "ext": "mp4",
       "bytes": 3214720,
-      "modified": "2026-10-23T17:31:04.793Z"
+      "modified": "2026-10-24T06:03:13.904Z",
+      "durationSec": 8,
+      "codec": "h264",
+      "width": 1280,
+      "height": 720
     },
     {
-      "name": "IMG_2041.jpg",
-      "kind": "image",
-      "ext": "jpg",
-      "bytes": 34079,
-      "modifi …
+      "name …
 
 > create_lane {"name":"Client docs"}
 {
@@ -35,74 +35,179 @@
   ]
 }
 
-> move_to_lane {"file":"client-contract.pdf","lane":"Client docs"}
+> assess_photos {}
 {
-  "from": "client-contract.pdf",
-  "to": "Client docs\\client-contract.pdf",
-  "lane": "Client docs"
+  "measured": 7,
+  "medianSubjectSharpness": 2999,
+  "groups": 1,
+  "photos": [
+    {
+      "file": "IMG_2041.jpg",
+      "sharpness": 580,
+      "subjectSharpness": 3439,
+      "exposure": {
+        "mean": 90,
+        "p5": 50,
+        "p95": 127,
+        "shadowClipPct": 0,
+        "highlightClipPct": 0
+      },
+      "hash": "00040c0c23310080",
+      "colour": "b06d3f9867477f5f4f8e5d3f7657476051505e463945393731313a",
+      "similarGroup": 1,
+      "bestInGroup": true,
+      "flags": [],
+      "relativeSharpness": 1,
+      "rank": 1
+    },
+    {
+      "file": "IMG_2045.jpg",
+      "sharpn …
+
+> contact_sheet {}
+[image image/jpeg, 29 KB]
+
+> contact_sheet {}
+{
+  "legend": [
+    {
+      "n": 1,
+      "file": "IMG_2041.jpg"
+    },
+    {
+      "n": 2,
+      "file": "IMG_2042.jpg"
+    },
+    {
+      "n": 3,
+      "file": "IMG_2043.jpg"
+    },
+    {
+      "n": 4,
+      "file": "IMG_2044.jpg"
+    },
+    {
+      "n": 5,
+      "file": "IMG_2045.jpg"
+    },
+    {
+      "n": 6,
+      "file": "IMG_2046.jpg"
+    },
+    {
+      "n": 7,
+      "file": "IMG_2047.jpg"
+    }
+  ],
+  "total": 7,
+  "nextOffset": null
 }
 
-> move_to_lane {"file":"drone-pass.mp4","lane":"Picks"}
+> preview_image {"file":"IMG_2041.jpg","size":512}
+[image image/jpeg, 18 KB]
+
+> preview_image {"file":"IMG_2041.jpg","size":512}
 {
-  "from": "drone-pass.mp4",
-  "to": "Picks\\drone-pass.mp4",
-  "lane": "Picks"
+  "file": "IMG_2041.jpg",
+  "sharpness": 580,
+  "subjectSharpness": 3439,
+  "exposure": {
+    "mean": 90,
+    "p5": 50,
+    "p95": 127,
+    "shadowClipPct": 0,
+    "highlightClipPct": 0
+  },
+  "hash": "00040c0c23310080",
+  "colour": "b06d3f9867477f5f4f8e5d3f7657476051505e463945393731313a"
 }
 
-> move_to_lane {"file":"IMG_2041.jpg","lane":"Picks"}
+> move_to_lane {"file":"IMG_2041.jpg","lane":"Picks","reason":"rank 1, 100% sharpness, clean exposure"}
 {
   "from": "IMG_2041.jpg",
   "to": "Picks\\IMG_2041.jpg",
-  "lane": "Picks"
+  "lane": "Picks",
+  "reason": "rank 1, 100% sharpness, clean exposure"
 }
 
-> move_to_lane {"file":"IMG_2042.jpg","lane":"Maybe"}
+> move_to_lane {"file":"IMG_2045.jpg","lane":"Picks","reason":"rank 2, 93% sharpness, clean exposure"}
+{
+  "from": "IMG_2045.jpg",
+  "to": "Picks\\IMG_2045.jpg",
+  "lane": "Picks",
+  "reason": "rank 2, 93% sharpness, clean exposure"
+}
+
+> move_to_lane {"file":"IMG_2042.jpg","lane":"Maybe","reason":"clean but rank 3 of 7"}
 {
   "from": "IMG_2042.jpg",
   "to": "Maybe\\IMG_2042.jpg",
-  "lane": "Maybe"
+  "lane": "Maybe",
+  "reason": "clean but rank 3 of 7"
 }
 
-> move_to_lane {"file":"IMG_2043.jpg","lane":"Rejects"}
+> move_to_lane {"file":"IMG_2044.jpg","lane":"Maybe","reason":"clean but rank 4 of 7"}
+{
+  "from": "IMG_2044.jpg",
+  "to": "Maybe\\IMG_2044.jpg",
+  "lane": "Maybe",
+  "reason": "clean but rank 4 of 7"
+}
+
+> move_to_lane {"file":"IMG_2043.jpg","lane":"Rejects","reason":"underexposed"}
 {
   "from": "IMG_2043.jpg",
   "to": "Rejects\\IMG_2043.jpg",
-  "lane": "Rejects"
+  "lane": "Rejects",
+  "reason": "underexposed"
 }
 
-> move_to_lane {"file":"IMG_2044.jpg","lane":"Picks"}
+> move_to_lane {"file":"IMG_2047.jpg","lane":"Rejects","reason":"same burst as a sharper frame (66% sharpness)"}
 {
-  "from": "IMG_2044.jpg",
-  "to": "Picks\\IMG_2044.jpg",
-  "lane": "Picks"
+  "from": "IMG_2047.jpg",
+  "to": "Rejects\\IMG_2047.jpg",
+  "lane": "Rejects",
+  "reason": "same burst as a sharper frame (66% sharpness)"
 }
 
-> move_to_lane {"file":"IMG_2045.jpg","lane":"Maybe"}
-{
-  "from": "IMG_2045.jpg",
-  "to": "Maybe\\IMG_2045.jpg",
-  "lane": "Maybe"
-}
-
-> move_to_lane {"file":"IMG_2046.jpg","lane":"Rejects"}
+> move_to_lane {"file":"IMG_2046.jpg","lane":"Rejects","reason":"out of focus"}
 {
   "from": "IMG_2046.jpg",
   "to": "Rejects\\IMG_2046.jpg",
-  "lane": "Rejects"
+  "lane": "Rejects",
+  "reason": "out of focus"
 }
 
-> move_to_lane {"file":"night-ferry.mp3","lane":"Maybe"}
+> move_to_lane {"file":"client-contract.pdf","lane":"Client docs","reason":"3-page contract"}
+{
+  "from": "client-contract.pdf",
+  "to": "Client docs\\client-contract.pdf",
+  "lane": "Client docs",
+  "reason": "3-page contract"
+}
+
+> move_to_lane {"file":"drone-pass.mp4","lane":"Picks","reason":"only video, trim below"}
+{
+  "from": "drone-pass.mp4",
+  "to": "Picks\\drone-pass.mp4",
+  "lane": "Picks",
+  "reason": "only video, trim below"
+}
+
+> move_to_lane {"file":"night-ferry.mp3","lane":"Maybe","reason":"music bed, not confirmed"}
 {
   "from": "night-ferry.mp3",
   "to": "Maybe\\night-ferry.mp3",
-  "lane": "Maybe"
+  "lane": "Maybe",
+  "reason": "music bed, not confirmed"
 }
 
-> move_to_lane {"file":"shot-list.csv","lane":"Client docs"}
+> move_to_lane {"file":"shot-list.csv","lane":"Client docs","reason":"shot list for the client"}
 {
   "from": "shot-list.csv",
   "to": "Client docs\\shot-list.csv",
-  "lane": "Client docs"
+  "lane": "Client docs",
+  "reason": "shot list for the client"
 }
 
 > resize_image {"file":"Picks/IMG_2041.jpg","width":1200,"format":"webp"}
@@ -110,7 +215,7 @@
   "output": "<workspace>\\Picks\\IMG_2041-1200xauto.webp",
   "width": 1200,
   "height": 800,
-  "bytes": 11962
+  "bytes": 262042
 }
 
 > trim_media {"file":"Picks/drone-pass.mp4","startSec":1,"endSec":4}
@@ -121,22 +226,22 @@
 
 > log_digest {}
 {
-  "sha256": "46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1",
-  "entries": 10
+  "sha256": "1f3b7978f414a367fa9de4f5d709b107afac58d07b6768bb70e0c32d7fc5434c",
+  "entries": 12
 }
 
 > seal_run {}
 {
-  "signature": "49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm",
-  "explorer": "https://explorer.solana.com/tx/49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm?cluster=devnet",
-  "memo": "cullyard:v1 log=46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1 entries=10",
+  "signature": "2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p",
+  "explorer": "https://explorer.solana.com/tx/2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p?cluster=devnet",
+  "memo": "cullyard:v1 log=1f3b7978f414a367fa9de4f5d709b107afac58d07b6768bb70e0c32d7fc5434c entries=12",
   "signer": "AsrL4uc9Ct7rhCASJXMhCtAX3k76RgkSsoe3pZFsBdyM"
 }
 
-> verify_seal {"signature":"49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm"}
+> verify_seal {"signature":"2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p"}
 {
-  "signature": "49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm",
-  "localSha256": "46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1",
-  "onChain": "cullyard:v1 log=46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1 entries=10",
+  "signature": "2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p",
+  "localSha256": "1f3b7978f414a367fa9de4f5d709b107afac58d07b6768bb70e0c32d7fc5434c",
+  "onChain": "cullyard:v1 log=1f3b7978f414a367fa9de4f5d709b107afac58d07b6768bb70e0c32d7fc5434c entries=12",
   "match": true
 }

@@ -27,22 +27,23 @@
   </header>
 
   <main id="main" class="wrap doc-main">
-    <p class="eyebrow">Build report · version 0.1.0 · 24 October 2026</p>
+    <p class="eyebrow">Build report · version 0.2.0 · 24 October 2026</p>
     <h1 class="doc-title">What Cullyard does, and how each part was checked</h1>
-    <p class="lede">Cullyard is a local MCP server with a desk in the browser. An AI agent such as Claude Code or Antigravity reads the files in one folder, sorts them into lanes, writes trimmed or resized copies, and can seal the sort log on Solana devnet. This page lists the evidence behind each of those claims.</p>
+    <p class="lede">Cullyard is a local MCP server with a desk in the browser. An AI agent such as Claude Code or Antigravity reads the files in one folder, looks at and measures the photos, sorts everything into lanes, writes trimmed or resized copies, and can seal the sort log on Solana devnet. This page lists the evidence behind each of those claims.</p>
 
     <nav class="toc" aria-label="On this page">
-      <a href="#summary">Summary</a><a href="#tests">Tests</a><a href="#run">Agent run</a><a href="#seal">Devnet seal</a><a href="#desk">Desk screenshots</a><a href="#design">Design choices</a><a href="#limits">Limits</a>
+      <a href="#summary">Summary</a><a href="#tests">Tests</a><a href="#look">Photo checks</a><a href="#run">Agent run</a><a href="#seal">Devnet seal</a><a href="#desk">Desk screenshots</a><a href="#design">Design choices</a><a href="#limits">Limits</a>
     </nav>
 
     <section id="summary" class="doc-sec">
       <h2>Summary</h2>
       <div class="table">
         <div class="row head"><span>Area</span><span>Result</span></div>
-        <div class="row"><span>MCP tools</span><span>11 tools over stdio: scan, describe, lanes, move, resize, trim, digest, seal, verify, kinds</span></div>
+        <div class="row"><span>MCP tools</span><span>14 tools over stdio: scan, describe, lanes, move, assess, contact sheet, preview, resize, trim, digest, seal, verify, kinds</span></div>
+        <div class="row"><span>Photo checks</span><span>In the recorded run, all three planted defects were found by measurement: one soft frame, one dark frame, one burst duplicate</span></div>
         <div class="row"><span>File kinds</span><span>10 kinds: image, raw, video, audio, pdf, document, archive, design, code, other. Unknown extensions are listed, never refused</span></div>
-        <div class="row"><span>Automated tests</span><span>13 of 13 pass with <code>npm test</code> (Node 24, Windows 11)</span></div>
-        <div class="row"><span>Recorded agent run</span><span>10 of 11 files sorted into 4 lanes, 1 WebP copy, 1 three-second trim, sealed and verified</span></div>
+        <div class="row"><span>Automated tests</span><span>18 of 18 pass with <code>npm test</code> (Node 24, Windows 11)</span></div>
+        <div class="row"><span>Recorded agent run</span><span>11 of 12 files sorted into 4 lanes with a reason each, 1 WebP copy, 1 three-second trim, sealed and verified</span></div>
         <div class="row"><span>Devnet seal</span><span>Memo read back from the chain on 24 October 2026 and equal to the local SHA-256</span></div>
         <div class="row"><span>Languages</span><span>English by default, Indonesian with one click, on the desk and the site</span></div>
       </div>
@@ -63,27 +64,50 @@
 ✔ desk: upload, no overwrite, move, state, log
 ✔ desk: refuses path traversal, hidden names and cross-origin writes
 ✔ seal: digest matches a plain sha256 of the log and the memo format is stable
+✔ look: blur lowers measured sharpness, a dark frame reads dark
+✔ look: a sharp subject on a blurred background still measures sharp
+✔ look: assess flags soft and dark frames, groups a burst and keeps its sharpest frame
+✔ look: same framing in different light is not a burst
+✔ look: contact sheet numbers each frame and caps at 16
 ✔ mcp: stdio server lists tools and sorts a file end to end
-ℹ tests 13
-ℹ pass 13
+ℹ tests 18
+ℹ pass 18
 ℹ fail 0</code></pre>
+    </section>
+
+    <section id="look" class="doc-sec">
+      <h2>Photo checks</h2>
+      <p>File metadata cannot tell a sharp frame from a blurred one, so version 0.2.0 gives the agent the photos themselves and a set of measurements.</p>
+      <ul class="doc-list">
+        <li><b>Pictures.</b> <code>contact_sheet</code> returns one numbered JPEG grid of up to 16 photos, and <code>preview_image</code> returns one photo up to 1024 px. Both are MCP image results, so a vision model looks at the pixels.</li>
+        <li><b>Focus.</b> Variance of the Laplacian on a contrast-stretched greyscale copy, per tile on a 4×4 grid; the sharpest tile counts. A frame is flagged <code>soft</code> under 40% of the set's median.</li>
+        <li><b>Exposure.</b> Mean brightness and clipped shadows or highlights give <code>dark</code> and <code>bright</code>.</li>
+        <li><b>Bursts.</b> A 64-bit difference hash and a 3×3 colour print must both match. The sharpest frame of a burst is kept; the rest are flagged <code>duplicate</code>.</li>
+      </ul>
+      <p>Three mistakes were found and fixed while building this, each now covered by a test: the first version grouped every sample into one burst because the hash ignores colour; a dark frame also read as soft because darkness lowers edge contrast; and the dark frame's sensor noise ranked it sharpest of the set. Rank now puts clean frames first, and percentages are measured against the sharpest well-exposed frame.</p>
+      <figure class="doc-fig">
+        <img src="/img/contact-sheet.jpg" alt="Numbered contact sheet of seven sample photos" loading="lazy" width="1024" height="436">
+        <figcaption>The contact sheet the agent received in the recorded run. Frame 3 is underexposed, frame 6 is blurred, and frame 7 is a softer copy of frame 1.</figcaption>
+      </figure>
     </section>
 
     <section id="run" class="doc-sec">
       <h2>Agent run</h2>
       <p><code>scripts/demo-agent.mjs</code> starts the real server over stdio and calls tools the way an agent does, with a pause between calls so the desk can be watched. Steps, in order:</p>
       <ol class="doc-list">
-        <li><code>scan_workspace</code> on eleven sample files: six JPG photos, one MP4, one MP3, one PDF, one CSV, one Markdown note.</li>
+        <li><code>scan_workspace</code> on twelve sample files: seven JPG photos, one MP4, one MP3, one PDF, one CSV, one Markdown note.</li>
         <li><code>create_lane</code> "Client docs".</li>
-        <li>Ten <code>move_to_lane</code> calls into Picks, Maybe, Rejects and Client docs. The note stays in Inbox on purpose.</li>
-        <li><code>resize_image</code> on IMG_2041.jpg to 1200 px WebP. The original stays in place.</li>
+        <li><code>assess_photos</code>, <code>contact_sheet</code> and <code>preview_image</code> on the top-ranked frame.</li>
+        <li>Seven photo moves decided from the measurements: the top two clean frames to Picks, the other clean frames to Maybe, the soft, dark and duplicate frames to Rejects. Each move carries its reason.</li>
+        <li>Four more moves for the PDF, CSV, video and song. The note stays in Inbox on purpose.</li>
+        <li><code>resize_image</code> on the top pick, IMG_2041.jpg, to 1200 px WebP. The original stays in place.</li>
         <li><code>trim_media</code> on drone-pass.mp4 from 1 s to 4 s, stream copy, no re-encode.</li>
         <li><code>log_digest</code>, <code>seal_run</code>, then <code>verify_seal</code>, which returned a match.</li>
       </ol>
       <p>Every call and reply is in the <a href="/files/agent-transcript.txt">agent transcript</a>. Local paths in it were replaced with <code>&lt;workspace&gt;</code>.</p>
       <figure class="doc-fig">
         <video src="/media/walkthrough.mp4" poster="/media/walkthrough-poster.jpg" controls muted playsinline preload="none"></video>
-        <figcaption>The desk during that run, 66 seconds. Frames were captured at about one per second and smoothed to 30 fps; the clock in the activity feed is the real time of each move.</figcaption>
+        <figcaption>The desk during that run, 80 seconds. Frames were captured at about one per second and smoothed to 30 fps; the clock in the activity feed is the real time of each move.</figcaption>
       </figure>
     </section>
 
@@ -91,9 +115,9 @@
       <h2>Devnet seal</h2>
       <p>Each move appends one JSON line to <code>.cullyard/log.jsonl</code>. Sealing hashes that file with SHA-256 and sends a single Memo program transaction. Only the hash and the entry count go on-chain.</p>
       <div class="proof">
-        <div class="proof-row"><span>Signature</span><a class="mono" href="https://explorer.solana.com/tx/49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm?cluster=devnet">49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm</a></div>
-        <div class="proof-row"><span>Memo</span><code>cullyard:v1 log=46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1 entries=10</code></div>
-        <div class="proof-row"><span>Slot</span><code>514323020 · 23 Oct 2026 17:33:29 UTC · no error</code></div>
+        <div class="proof-row"><span>Signature</span><a class="mono" href="https://explorer.solana.com/tx/2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p?cluster=devnet">2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p</a></div>
+        <div class="proof-row"><span>Memo</span><code>cullyard:v1 log=1f3b7978f414a367fa9de4f5d709b107afac58d07b6768bb70e0c32d7fc5434c entries=12</code></div>
+        <div class="proof-row"><span>Slot</span><code>514512080 · 24 Oct 2026 06:05:39 UTC · no error</code></div>
         <div class="proof-row"><span>Signer</span><code>AsrL4uc9Ct7rhCASJXMhCtAX3k76RgkSsoe3pZFsBdyM</code></div>
         <div class="proof-row"><span>Check</span><b class="ok">memo on chain equals the local hash</b></div>
       </div>
@@ -102,14 +126,14 @@
 
     <section id="desk" class="doc-sec">
       <h2>Desk screenshots</h2>
-      <p>Captured from the desk in headless Chrome during the recorded run; image 2 is a frame from the walkthrough video. The workspace path in the header was covered because it contained a local user name.</p>
+      <p>Captured from the desk in headless Chrome during the recorded run; images 2 and 3 are frames from the walkthrough video. The header shows only the folder name, so no local path appears.</p>
       <div class="gallery">
-        <figure><img src="/img/01-desk-inbox.jpg" alt="Eleven files waiting in the Inbox" loading="lazy" width="1600" height="956"><figcaption>1. Before the run: eleven files in Inbox, empty lanes.</figcaption></figure>
-        <figure><img src="/img/02-desk-sorting.jpg" alt="Cards moving into lanes mid-run" loading="lazy" width="1440" height="860"><figcaption>2. Mid-run: the activity feed lists each move as the agent makes it.</figcaption></figure>
+        <figure><img src="/img/01-desk-inbox.jpg" alt="Twelve files waiting in the Inbox" loading="lazy" width="1600" height="956"><figcaption>1. Before the run: twelve files in Inbox, empty lanes.</figcaption></figure>
+        <figure><img src="/img/02-desk-sorting.jpg" alt="Photos sorted with rank and flags, other files still in Inbox" loading="lazy" width="1600" height="956"><figcaption>2. Photos sorted: each card shows its rank and flags, and each feed entry its reason.</figcaption></figure>
         <figure><img src="/img/03-desk-sorted.jpg" alt="All lanes filled after sorting" loading="lazy" width="1600" height="956"><figcaption>3. Sorted, with the custom Client docs lane the agent created.</figcaption></figure>
         <figure><img src="/img/04-desk-sealed.jpg" alt="Activity feed showing the devnet seal" loading="lazy" width="1600" height="956"><figcaption>4. Sealed: the newest feed entry links to the devnet transaction.</figcaption></figure>
         <figure><img src="/img/05-desk-indonesian.jpg" alt="The same desk in Indonesian" loading="lazy" width="1600" height="956"><figcaption>5. The same state in Indonesian.</figcaption></figure>
-        <figure class="tall"><img src="/img/06-desk-mobile.jpg" alt="Desk on a phone-width screen" loading="lazy" width="780" height="1688"><figcaption>6. Phone width: lanes stack, the workspace path is hidden.</figcaption></figure>
+        <figure class="tall"><img src="/img/06-desk-mobile.jpg" alt="Desk on a phone-width screen" loading="lazy" width="780" height="1688"><figcaption>6. Phone width: lanes stack, the workspace name is hidden.</figcaption></figure>
       </div>
     </section>
 
@@ -127,7 +151,9 @@
     <section id="limits" class="doc-sec">
       <h2>Limits</h2>
       <ul class="doc-list">
-        <li>Cullyard does not judge photos itself. The agent decides; Cullyard gives it metadata and safe file operations.</li>
+        <li>The photo thresholds were tuned on generated test images, not on a real shoot yet. Flags are hints; the agent should still look at the contact sheet before rejecting anything.</li>
+        <li>A shallow-focus portrait or a deliberate low-key shot can be a keeper with "bad" numbers. The measurements cannot judge intent.</li>
+        <li>Image results were checked with the MCP SDK client and work in Claude Code. Whether Antigravity passes image results to its model was not tested.</li>
         <li>Trim copies streams without re-encoding, so cuts land on the nearest keyframe and can be a fraction of a second off.</li>
         <li>RAW previews depend on what the bundled image decoder can read. Some camera formats show size and kind only.</li>
         <li>On the test machine, a trim through MCP took about 34 seconds end to end, mostly process start-up; FFmpeg itself finished in under 2 seconds.</li>

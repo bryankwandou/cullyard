@@ -81,13 +81,14 @@
 
 <section class="slide">
   <p class="kicker">How it works</p>
-  <h2>Eleven MCP tools. One folder. No upload.</h2>
+  <h2>14 MCP tools. One folder. No upload.</h2>
   <table>
     <tr><th>Step</th><th>Tool</th><th>What happens</th></tr>
     <tr><td>Read</td><td class="mono">scan_workspace · describe_file</td><td>Kind, size, pixel size, duration, codec, artist, page count</td></tr>
-    <tr><td>Sort</td><td class="mono">create_lane · move_to_lane</td><td>Moves into lane folders, refuses to overwrite or leave the workspace</td></tr>
-    <tr><td>Edit</td><td class="mono">resize_image · trim_media</td><td>WebP, JPG, PNG, AVIF copies; time-range cuts without re-encoding</td></tr>
-    <tr><td>Prove</td><td class="mono">log_digest · seal_run · verify_seal</td><td>SHA-256 of the move log, written to a devnet memo and checked back</td></tr>
+    <tr><td>Look</td><td class="mono">contact_sheet · preview_image · assess_photos</td><td>Sees the photos; measures focus, exposure, bursts</td></tr>
+    <tr><td>Sort</td><td class="mono">create_lane · move_to_lane</td><td>Lane folders, a reason per move, never overwrites</td></tr>
+    <tr><td>Edit</td><td class="mono">resize_image · trim_media</td><td>Resized copies; cuts without re-encoding</td></tr>
+    <tr><td>Prove</td><td class="mono">log_digest · seal_run · verify_seal</td><td>Log hash in a devnet memo, checked back</td></tr>
   </table>
   <div class="foot"><span>Cullyard</span><span>04</span></div>
 </section>
@@ -98,8 +99,8 @@
   <p class="lede" style="margin-top:0; max-width:1500px">A photographer hands over selects. A studio hands over a cut. The client can check that the log of moves was not edited later. Only a hash goes on-chain, never file names or files.</p>
   <div class="memo" style="margin-top:auto">
     <div style="color:var(--faint)">devnet memo from the recorded run</div>
-    <b>cullyard:v1</b> log=46935d623104460f457298f182c262b9d908fb1a419479c98d7d3b5f050e06d1 entries=10<br>
-    <span style="color:var(--faint)">tx</span> 49XyVeqwpvCKmWLq5X6jU8jhDYY4ZAV3eQfJVEcG1RsmwQenkDPU94BUhwWfXgF3j6rHS7TjA8rXLqcevH4dHVXm · <b>match</b>
+    <b>cullyard:v1</b> log=1f3b7978f414a367fa9de4f5d709b107afac58d07b6768bb70e0c32d7fc5434c entries=12<br>
+    <span style="color:var(--faint)">tx</span> 2mU9BU34xv2kxLfku9eVrT8R3bCEWgBag7Hm8cwuYvbJeMPZzDte4QG1t5fj5Qc5oGcqpx9nexFmNNk4SSK88m6p · <b>match</b>
   </div>
   <div class="foot"><span>Cullyard</span><span>05</span></div>
 </section>
@@ -108,10 +109,10 @@
   <p class="kicker">Proof it runs</p>
   <h2>A real agent run, recorded end to end.</h2>
   <div class="grid3" style="grid-template-columns: repeat(4, 1fr)">
-    <div class="stat"><div class="big">10</div><p>files sorted into 4 lanes</p></div>
-    <div class="stat"><div class="big">1</div><p>photo resized to 1200 px WebP</p></div>
+    <div class="stat"><div class="big">11</div><p>files sorted into 4 lanes, each with a reason</p></div>
+    <div class="stat"><div class="big">3/3</div><p>planted photo defects caught by measurement</p></div>
     <div class="stat"><div class="big">3 s</div><p>clip trimmed without re-encoding</p></div>
-    <div class="stat"><div class="big">13/13</div><p>automated tests passing</p></div>
+    <div class="stat"><div class="big">18/18</div><p>automated tests passing</p></div>
   </div>
   <div class="foot"><span>scripts/demo-agent.mjs drives the real stdio server</span><span>06</span></div>
 </section>
@@ -134,7 +135,7 @@
   <p class="kicker">Next</p>
   <h2>From a desk to the hand-off.</h2>
   <div class="grid3">
-    <div class="card"><div class="n">Now</div><h3>Open source MVP</h3><p>Eleven tools, the desk, English and Indonesian, devnet seals, Windows first.</p></div>
+    <div class="card"><div class="n">Now</div><h3>Open source MVP</h3><p>Fourteen tools, the desk, photo checks, English and Indonesian, devnet seals, Windows first.</p></div>
     <div class="card"><div class="n">Next</div><h3>Client hand-off page</h3><p>A shareable page that shows the picks and checks the seal, so the client verifies without a wallet.</p></div>
     <div class="card"><div class="n">Later</div><h3>Studio plan</h3><p>Shared lanes for a team, mainnet seals on request, and paid hosting for hand-off pages.</p></div>
   </div>

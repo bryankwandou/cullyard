@@ -10,14 +10,27 @@ import ffmpeg from 'ffmpeg-static';
 const dir = path.resolve(process.argv[2] ?? 'demo-workspace');
 await fs.mkdir(dir, { recursive: true });
 
+// The defects are real, not just labels: assess_photos should find them by measuring.
+// [name, colour a, colour b, label, seed, blur sigma, brightness]
 const shots = [
-  ['IMG_2041.jpg', '#c9773a', '#2b3a55', 'Harbor, golden hour'], ['IMG_2042.jpg', '#6b8f71', '#1f2a24', 'Ridge trail'],
-  ['IMG_2043.jpg', '#3a3f47', '#121417', 'Underexposed'], ['IMG_2044.jpg', '#d9a441', '#5a2e1d', 'Market stall'],
-  ['IMG_2045.jpg', '#8ab6d6', '#334a63', 'Blue hour pier'], ['IMG_2046.jpg', '#b9b2a6', '#4f4a44', 'Blurry, motion'],
+  ['IMG_2041.jpg', '#c9773a', '#2b3a55', 'Harbor, golden hour', 1, 0, 1], ['IMG_2042.jpg', '#6b8f71', '#1f2a24', 'Ridge trail', 2, 0, 1.1],
+  ['IMG_2043.jpg', '#3a3f47', '#121417', 'Underexposed', 3, 0, 0.35], ['IMG_2044.jpg', '#d9a441', '#5a2e1d', 'Market stall', 4, 0, 1],
+  ['IMG_2045.jpg', '#8ab6d6', '#334a63', 'Blue hour pier', 5, 0, 1], ['IMG_2046.jpg', '#b9b2a6', '#4f4a44', 'Blurry, motion', 6, 7, 1],
+  ['IMG_2047.jpg', '#c9773a', '#2b3a55', 'Harbor, golden hour', 1, 1.6, 1],
 ];
-for (const [name, a, b, label] of shots) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1067"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><circle cx="1150" cy="380" r="170" fill="#fff" opacity=".18"/><path d="M0 820 L420 560 L760 760 L1100 520 L1600 800 L1600 1067 L0 1067Z" fill="#000" opacity=".28"/><text x="64" y="990" font-family="Segoe UI, Arial" font-size="54" fill="#fff" opacity=".85">${label}</text></svg>`;
-  await sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toFile(path.join(dir, name));
+const W = 1600; const H = 1067;
+for (const [name, a, b, label, seed, sigma, gain] of shots) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><circle cx="1150" cy="380" r="170" fill="#fff" opacity=".18"/><path d="M0 820 L420 560 L760 760 L1100 520 L1600 800 L1600 1067 L0 1067Z" fill="#000" opacity=".28"/><text x="64" y="990" font-family="Segoe UI, Arial" font-size="54" fill="#fff" opacity=".85">${label}</text></svg>`;
+  // Fine seeded grain stands in for real scene detail, so focus can be measured.
+  const px = await sharp(Buffer.from(svg)).removeAlpha().raw().toBuffer();
+  let s = seed;
+  for (let i = 0; i < px.length; i++) {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    px[i] = Math.max(0, Math.min(255, Math.round((px[i] + ((s / 2 ** 32) - 0.5) * 60) * gain)));
+  }
+  let img = sharp(px, { raw: { width: W, height: H, channels: 3 } });
+  if (sigma) img = img.blur(sigma);
+  await img.jpeg({ quality: 88 }).toFile(path.join(dir, name));
 }
 
 const run = (args) => { const r = spawnSync(ffmpeg, ['-hide_banner', '-loglevel', 'error', '-y', ...args]); if (r.status) throw new Error(String(r.stderr)); };

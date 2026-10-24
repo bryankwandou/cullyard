@@ -97,6 +97,7 @@ h1 { font-size: clamp(38px, 5.2vw, 62px); line-height: 1.04; letter-spacing: -.0
 .checks li { padding-left: 26px; position: relative; font-size: 15px; }
 .checks li::before { content: ""; position: absolute; left: 2px; top: 7px; width: 10px; height: 6px; border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); }
 .video { margin: 0; }
+.video img, .doc-fig img { width: 100%; height: auto; border-radius: var(--r); border: 1px solid var(--line-strong); background: var(--bg); }
 .video video { width: 100%; border-radius: var(--r); border: 1px solid var(--line-strong); background: var(--surface); aspect-ratio: 1440 / 860; }
 figcaption { font-size: 13px; color: var(--faint); margin-top: 10px; }
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }

@@ -51,8 +51,8 @@
         </div>
         <dl class="facts">
           <div><dt data-i18n="facts.kinds">File kinds</dt><dd class="num">10</dd></div>
-          <div><dt data-i18n="facts.tools">MCP tools</dt><dd class="num">11</dd></div>
-          <div><dt data-i18n="facts.tests">Tests passing</dt><dd class="num" id="tests-count">13/13</dd></div>
+          <div><dt data-i18n="facts.tools">MCP tools</dt><dd class="num">14</dd></div>
+          <div><dt data-i18n="facts.tests">Tests passing</dt><dd class="num" id="tests-count">18/18</dd></div>
         </dl>
       </div>
 
@@ -106,9 +106,10 @@
       <div class="split">
         <div>
           <h2 class="h2" data-i18n="run.title">A real run, recorded as it happened</h2>
-          <p class="body" data-i18n="run.p">This is the desk while a script drives the actual MCP server the way an agent does: scan, make a lane, sort ten of eleven files, resize a pick, trim a clip, seal the log on devnet, verify the seal. No mockups, no speed-up tricks beyond the frame rate.</p>
+          <p class="body" data-i18n="run.p">This is the desk while a script drives the actual MCP server the way an agent does: scan, make a lane, measure the photos and look at them, sort eleven of twelve files with a reason for each, resize the top pick, trim a clip, seal the log on devnet, verify the seal. No mockups, no speed-up tricks beyond the frame rate.</p>
           <ul class="checks">
-            <li data-i18n="run.c1">10 files sorted across 4 lanes</li>
+            <li data-i18n="run.c1">11 files sorted across 4 lanes, each with a reason</li>
+            <li data-i18n="run.c5">7 photos measured: 1 soft, 1 dark, 1 burst duplicate caught</li>
             <li data-i18n="run.c2">1 WebP copy at 1200 px wide</li>
             <li data-i18n="run.c3">1 three-second clip cut without re-encoding</li>
             <li data-i18n="run.c4">1 devnet memo that matches the log hash</li>
@@ -120,9 +121,28 @@
         </figure>
       </div>
       <div class="shots">
-        <figure class="reveal"><img src="/img/01-desk-inbox.jpg" alt="Desk with eleven files in the Inbox before sorting" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.a">Before: everything lands in Inbox.</figcaption></figure>
+        <figure class="reveal"><img src="/img/01-desk-inbox.jpg" alt="Desk with twelve files in the Inbox before sorting" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.a">Before: everything lands in Inbox.</figcaption></figure>
         <figure class="reveal"><img src="/img/04-desk-sealed.jpg" alt="Desk after sorting, with the activity feed showing a devnet seal" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.b">After: lanes filled, log sealed.</figcaption></figure>
         <figure class="reveal"><img src="/img/05-desk-indonesian.jpg" alt="Desk interface in Indonesian" loading="lazy" width="1440" height="860"><figcaption data-i18n="shots.c">The desk speaks English and Indonesian.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="wrap section" id="look">
+      <div class="split">
+        <div>
+          <h2 class="h2" data-i18n="look.title">The agent looks at your photos, then measures them</h2>
+          <p class="body" data-i18n="look.p">File names cannot tell a sharp frame from a blurred one. Cullyard sends the photos themselves to your agent as a numbered contact sheet, and measures each one against the rest of the set: focus on the sharpest part of the frame, exposure, and which frames belong to one burst. Every move carries a reason, and the desk shows the same numbers on each card.</p>
+          <ul class="checks">
+            <li data-i18n="look.c1">A sharp subject on a soft background still counts as sharp</li>
+            <li data-i18n="look.c2">A dark frame is flagged dark, not blurry</li>
+            <li data-i18n="look.c3">Same framing in different light is not called a duplicate</li>
+            <li data-i18n="look.c4">The sharpest frame of each burst is kept</li>
+          </ul>
+        </div>
+        <figure class="video reveal">
+          <img src="/img/contact-sheet.jpg" alt="Numbered contact sheet of seven sample photos, as the agent received it" loading="lazy" width="1024" height="436">
+          <figcaption data-i18n="look.cap">The contact sheet the agent received in the recorded run, unedited.</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -135,7 +155,10 @@
         <div class="row" role="row"><code>describe_file</code><span data-i18n="t.describe">Metadata for one file.</span></div>
         <div class="row" role="row"><code>list_lanes</code><span data-i18n="t.lanes">Current lanes and which file sits where.</span></div>
         <div class="row" role="row"><code>create_lane</code><span data-i18n="t.create">Adds a lane such as "Hero shots" or "Final cut".</span></div>
-        <div class="row" role="row"><code>move_to_lane</code><span data-i18n="t.move">Moves a file into a lane folder. Refuses to overwrite.</span></div>
+        <div class="row" role="row"><code>move_to_lane</code><span data-i18n="t.move">Moves a file into a lane folder, with the reason shown on the desk. Refuses to overwrite.</span></div>
+        <div class="row" role="row"><code>assess_photos</code><span data-i18n="t.assess">Measures focus, exposure and bursts for every photo and ranks them against each other.</span></div>
+        <div class="row" role="row"><code>contact_sheet</code><span data-i18n="t.sheet">A numbered grid of up to 16 photos, sent as an image the agent can see.</span></div>
+        <div class="row" role="row"><code>preview_image</code><span data-i18n="t.preview">One photo as an image, up to 1024 px, with its measurements.</span></div>
         <div class="row" role="row"><code>resize_image</code><span data-i18n="t.resize">Writes a resized WebP, JPG, PNG or AVIF copy.</span></div>
         <div class="row" role="row"><code>trim_media</code><span data-i18n="t.trim">Cuts a time range from video or audio with no re-encode.</span></div>
         <div class="row" role="row"><code>log_digest</code><span data-i18n="t.digest">SHA-256 of the sorting log, computed locally.</span></div>
@@ -197,7 +220,7 @@ node bin/cullyard.js "D:\Shoots\Bali"     # MCP over stdio + desk on :4870</code
 
     <section class="wrap section" id="kit">
       <h2 class="h2" data-i18n="kit.title">Media kit</h2>
-      <p class="body narrow" data-i18n="kit.p">Everything below comes from the same recorded run as the walkthrough above.</p>
+      <p class="body narrow" data-i18n="kit.p">The report, transcript and proof come from the recorded run above. The product film was made from the earlier 0.1.0 run, before photo checks.</p>
       <div class="kit">
         <figure class="kit-video reveal">
           <video src="/media/cullyard-marketing.mp4" poster="/media/marketing-poster.jpg" controls muted playsinline preload="none"></video>
@@ -215,7 +238,8 @@ node bin/cullyard.js "D:\Shoots\Bali"     # MCP over stdio + desk on :4870</code
     <section class="wrap section limits">
       <h2 class="h2" data-i18n="lim.title">What it does not do, yet</h2>
       <ul class="lim-list">
-        <li data-i18n="lim.1">It does not judge photos by itself. Your agent decides; Cullyard gives it the facts and the hands.</li>
+        <li data-i18n="lim.1">Photo thresholds were tuned on generated test images, not yet on a real shoot. Flags are hints; the agent should still look at the contact sheet.</li>
+        <li data-i18n="lim.4">Image tools need a client that shows image results to the model. Claude Code does; Antigravity was not tested yet.</li>
         <li data-i18n="lim.2">No timeline editor. Trims and resizes are single steps, not a Premiere replacement.</li>
         <li data-i18n="lim.3">Seals use devnet. A mainnet option waits until someone asks for it with a real workflow.</li>
       </ul>

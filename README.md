@@ -55,7 +55,10 @@ To seal runs on devnet, set `CULLYARD_KEYPAIR` to the path of a devnet keypair J
 | `describe_file` | Metadata for one file |
 | `list_lanes` | Current lanes and which file sits where |
 | `create_lane` | Adds a lane, such as "Hero shots" or "Client docs" |
-| `move_to_lane` | Moves a file into a lane folder; never overwrites |
+| `move_to_lane` | Moves a file into a lane folder, with an optional reason shown on the desk; never overwrites |
+| `assess_photos` | Measures focus, exposure and bursts for every photo, ranks them against each other |
+| `contact_sheet` | One numbered grid of up to 16 photos, returned as an image the agent can look at |
+| `preview_image` | One photo as an image (up to 1024 px), plus its measurements |
 | `resize_image` | Writes a resized WebP, JPG, PNG or AVIF copy |
 | `trim_media` | Cuts a time range from video or audio without re-encoding |
 | `log_digest` | SHA-256 of the sort log, computed locally |
@@ -65,9 +68,24 @@ To seal runs on devnet, set `CULLYARD_KEYPAIR` to the path of a devnet keypair J
 
 Rules the server enforces: paths outside the workspace are refused, moves never overwrite, edits always write a new file, and the original is never touched.
 
+## How the agent sees photos
+
+Metadata alone cannot tell a sharp frame from a blurred one, so Cullyard gives the agent two kinds of evidence.
+
+**Pictures.** `contact_sheet` and `preview_image` return real images over MCP, so a vision model such as Claude looks at the photos instead of guessing from file names. The sheet numbers each frame, and the legend maps numbers back to files.
+
+**Measurements.** `assess_photos` measures each photo and compares it with the rest of the set:
+
+- Focus: variance of the Laplacian on a contrast-stretched greyscale copy, measured per tile on a 4×4 grid. The sharpest tile counts, so a sharp subject on a soft background still reads as sharp, and a dark frame is not mistaken for a soft one.
+- Exposure: mean brightness and the share of clipped shadows and highlights.
+- Bursts: a 64-bit difference hash plus a 3×3 colour print. Two frames are one burst only when both match, so the same framing at golden hour and at blue hour stays separate. The sharpest frame of each burst is kept; the others are flagged `duplicate`.
+- Flags: `soft` (under 40% of the set's median focus), `dark`, `bright`, `duplicate`. Rank puts clean frames first, sharpest first.
+
+The results are saved in `.cullyard/quality.json`, and the desk shows them on each card, so you see the same evidence the agent used. The numbers are signals, not verdicts: a shallow-focus portrait or a night shot can be a keeper with "bad" numbers, which is why the agent also looks at the picture.
+
 ## A real run
 
-`scripts/demo-agent.mjs` drives the real server over stdio, the same way an agent does. It scans eleven sample files, creates a "Client docs" lane, sorts ten of them, resizes one photo to 1200 px WebP, trims three seconds from a clip, seals the log on devnet and verifies the seal. The full output is in [docs/agent-transcript.txt](docs/agent-transcript.txt), and the recorded desk is in [web/media/walkthrough.mp4](web/media/walkthrough.mp4).
+`scripts/demo-agent.mjs` drives the real server over stdio, the same way an agent does. It scans twelve sample files, creates a "Client docs" lane, measures the seven photos, looks at them on a contact sheet, sorts photos from what it measured (with a reason on every move), files the other four, resizes the top pick to 1200 px WebP, trims three seconds from a clip, seals the log on devnet and verifies the seal. The full output is in [docs/agent-transcript.txt](docs/agent-transcript.txt), and the recorded desk is in [web/media/walkthrough.mp4](web/media/walkthrough.mp4).
 
 ```bash
 npm install
@@ -93,13 +111,13 @@ cullyard:v1 log=<sha256> entries=<count>
 npm test
 ```
 
-Thirteen tests cover file kinds, scanning, lanes, path traversal, no-overwrite moves, resizing, video probing, the desk's upload and cross-origin guard, the seal digest, and a full MCP stdio round trip.
+Eighteen tests cover file kinds, scanning, lanes, path traversal, no-overwrite moves, resizing, video probing, the desk's upload and cross-origin guard, the seal digest, photo measurement (blur, a sharp subject on a soft background, dark frames, bursts, colour-separated framings), the contact sheet, and a full MCP stdio round trip that includes the image tools.
 
 ## Layout
 
 ```
 bin/        command-line entry (MCP over stdio, plus the desk)
-src/        scan, lanes, edit, seal, MCP server, desk server
+src/        scan, lanes, edit, look (photo measurement), seal, MCP server, desk server
 desk/       the browser desk (plain HTML, CSS, JS; English and Indonesian)
 web/        landing page, screenshots, walkthrough video, proof.json
 scripts/    sample generator and the demo agent
@@ -111,7 +129,8 @@ video/      marketing video
 
 ## What it does not do yet
 
-- It does not judge photos by itself. Your agent decides; Cullyard gives it the facts and the hands.
+- The photo thresholds were tuned on generated test images, not yet on a real shoot. Treat flags as hints and check the contact sheet.
+- Image tools need an MCP client that shows image results to the model. Claude Code does; other clients were not tested.
 - There is no timeline editor. Trim and resize are single steps.
 - Seals use devnet only.
 

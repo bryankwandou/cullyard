@@ -39,13 +39,21 @@ function card(file, rel) {
   }
   const li = el('li', { class: 'card', tabindex: '0', draggable: 'true', 'data-rel': rel, title: file.name },
     thumb,
-    el('div', { class: 'meta' }, el('div', { class: 'name' }, file.name), el('div', { class: 'sub' }, `${file.kind} · ${fmtBytes(file.bytes)}`)));
+    el('div', { class: 'meta' }, el('div', { class: 'name' }, file.name), el('div', { class: 'sub' }, `${file.kind} · ${fmtBytes(file.bytes)}`), qualityLine(state.quality?.[file.name])));
   li.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/x-cullyard', rel); li.classList.add('dragging'); });
   li.addEventListener('dragend', () => li.classList.remove('dragging'));
   li.addEventListener('focus', () => select(rel));
   li.addEventListener('click', () => select(rel));
   if (rel === selected) li.classList.add('sel');
   return li;
+}
+
+// What assess_photos measured, so the person sees the same evidence the agent used.
+function qualityLine(q) {
+  if (!q) return null;
+  const tags = q.flags.map((f) => el('span', { class: `q q-${f}` }, t(`flag_${f}`)));
+  if (q.similarGroup && !q.flags.includes('duplicate')) tags.push(el('span', { class: 'q q-best' }, t('flag_best')));
+  return el('div', { class: 'quality' }, el('span', { class: 'q-rank' }, `${t('rank')} ${q.rank} · ${Math.round(q.relativeSharpness * 100)}%`), ...tags);
 }
 
 function select(rel) {
@@ -120,16 +128,19 @@ function feedItem(entry) {
     const link = el('a', { href: `https://explorer.solana.com/tx/${entry.signature}?cluster=devnet`, target: '_blank', rel: 'noopener' }, `${entry.signature.slice(0, 10)}…`);
     return el('li', {}, time, el('em', {}, t('action_seal')), ' ', link);
   }
-  if (entry.action === 'move') return el('li', {}, time, `${t('action_move')} `, el('b', {}, entry.file), ` ${t('to')} `, el('em', {}, entry.lane));
+  if (entry.action === 'move') return el('li', {}, time, `${t('action_move')} `, el('b', {}, entry.file), ` ${t('to')} `, el('em', {}, entry.lane), entry.reason ? el('q', {}, entry.reason) : null);
+  if (entry.action === 'assess') return el('li', {}, time, `${t('action_assess')} `, el('b', {}, `${entry.count} ${t('photos')}`));
   return el('li', {}, time, `${t(`action_${entry.action}`)} `, el('b', {}, entry.file ?? ''));
 }
 
 function render(force) {
   if (!state) return;
-  const sig = JSON.stringify([state.laneOrder, state.inbox, state.lanes, state.log[0], lang]);
+  const sig = JSON.stringify([state.laneOrder, state.inbox, state.lanes, state.log[0], state.quality, lang]);
   if (!force && sig === lastSig) return;
   lastSig = sig;
-  $('#ws').textContent = state.workspace;
+  // Folder name only: the full path carries the Windows user name into every screenshot.
+  $('#ws').textContent = state.workspace.split(/[\\/]/).filter(Boolean).pop() ?? state.workspace;
+  $('#ws').title = state.workspace;
   $('#inbox-count').textContent = state.inbox.length;
   fillCards($('#inbox'), state.inbox, '');
   $('#lanes').replaceChildren(...state.laneOrder.map(laneColumn), addLaneControl());
